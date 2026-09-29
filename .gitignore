@@ -1,0 +1,26 @@
+# Local credentials
+.env
+.env.*
+!.env.example
+config/*.env
+!config/*.example.env
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Dependencies and generated output
+node_modules/
+playwright-report/
+test-results/
+results/
+evidence/
+output/
+dist/
+coverage/
+*.log
+
+# Local/editor files
+.DS_Store
+.idea/
+.vscode/
