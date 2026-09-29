@@ -4,10 +4,20 @@
 !.env.example
 config/*.env
 !config/*.example.env
+!config/README.md
+auth/storageState.json
+auth/*.state.json
+auth/*.json
 *.pem
 *.key
+*.crt
+*.cer
+*.jks
 *.p12
 *.pfx
+*.webm
+*.trace
+*.zip
 
 # Dependencies and generated output
 node_modules/
@@ -18,6 +28,10 @@ evidence/
 output/
 dist/
 coverage/
+codegen-output/*
+!codegen-output/README.md
+.test-state/
+tmp/
 *.log
 
 # Local/editor files

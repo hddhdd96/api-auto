@@ -1,3 +1,3 @@
-# Page components
+# 공통 UI 컴포넌트
 
-Put shared UI components such as navigation or common dialogs here after their locators have been verified.
+여러 페이지에서 공유하는 내비게이션, 공통 대화상자 등 UI 동작을 배치합니다.

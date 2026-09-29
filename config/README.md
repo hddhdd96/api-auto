@@ -1,3 +1,3 @@
-# Configuration
+# 실행 설정
 
-`environments.example.env` documents variable names with safe placeholders. Keep live URLs and credentials in a local ignored `.env` or an approved secret manager.
+테스트 suite와 실행 도구 옵션을 관리하는 경로입니다. 환경 변수 예시는 저장소 루트의 `.env.example`에 두고 실제 URL과 계정 정보는 Git에서 제외되는 `.env` 또는 승인된 비밀 저장소에서 관리합니다.

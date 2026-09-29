@@ -1,9 +1,9 @@
-# Locator dictionary
+# Locator 사전
 
-Record a locator only after validating it against the intended interface.
+대상 UI에서 검증한 locator만 기록합니다.
 
-| Page or component | Purpose | Locator strategy | Verification notes |
+| 페이지/컴포넌트 | 목적 | Locator 방식 | 검증 내용 |
 | --- | --- | --- | --- |
-| `<page>` | `<user action or assertion>` | `<role/label/test id>` | `<validated state>` |
+| `<페이지>` | `<동작 또는 검증>` | `<role/label/test id>` | `<확인한 상태>` |
 
-Do not include internal hostnames, account names, screenshots, or customer data.
+내부 호스트명, 계정명, 실제 화면 캡처와 고객 데이터는 기록하지 않습니다.

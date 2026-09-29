@@ -1,14 +1,11 @@
 import type { Page, TestInfo } from '@playwright/test';
 
-export async function captureFailureScreenshot(
+export async function captureCheckpointScreenshot(
   page: Page,
   testInfo: TestInfo,
+  checkpointName: string,
 ): Promise<void> {
-  if (testInfo.status === testInfo.expectedStatus || page.isClosed()) {
-    return;
-  }
-
-  await testInfo.attach('failure-screenshot', {
+  await testInfo.attach(checkpointName, {
     body: await page.screenshot({ fullPage: true }),
     contentType: 'image/png',
   });

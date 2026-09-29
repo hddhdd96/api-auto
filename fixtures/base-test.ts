@@ -1,4 +1,14 @@
-import { test as base, expect } from '@playwright/test';
+import { test as playwrightTest, expect } from '@playwright/test';
+import { VolumePage } from '../pages/storage/VolumePage';
 
-export const test = base;
+type PortfolioFixtures = {
+  volumePage: VolumePage;
+};
+
+export const test = playwrightTest.extend<PortfolioFixtures>({
+  volumePage: async ({ page }, use) => {
+    await use(new VolumePage(page));
+  },
+});
+
 export { expect };
