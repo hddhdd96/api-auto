@@ -1,40 +1,7 @@
-# Local credentials
 .env
-.env.*
-!.env.example
-config/*.env
-!config/*.example.env
-!config/README.md
-auth/storageState.json
-auth/*.state.json
-auth/*.json
+logs/*.log
 *.pem
-*.key
-*.crt
-*.cer
-*.jks
-*.p12
 *.pfx
-*.webm
-*.trace
-*.zip
-
-# Dependencies and generated output
-node_modules/
-playwright-report/
-test-results/
-results/
-evidence/
-output/
-dist/
-coverage/
-codegen-output/*
-!codegen-output/README.md
-.test-state/
-tmp/
-*.log
-
-# Local/editor files
+*.key
+ids*.env
 .DS_Store
-.idea/
-.vscode/
