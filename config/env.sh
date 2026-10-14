@@ -18,7 +18,7 @@ fi
 : "${TIMEOUT_DELETE:=120}"
 : "${CONNECT_TIMEOUT:=10}"
 : "${MAX_TIME:=60}"
-: "${INSTANCE_NAME:=qa-test-instance}"
+: "${INSTANCE_NAME:=qa-instance-$(date +%Y%m%d%H%M%S)-$$-${RANDOM}}"
 : "${NETWORK_NAME:=qa-test-network}"
 
 export CURL_PATH JQ_PATH POLL_INTERVAL TIMEOUT_VM_ACTIVE TIMEOUT_DELETE

@@ -6,7 +6,7 @@ LOG_FILE="${LOG_FILE:-}"
 init_logging() {
   local dir="${1:-logs}"
   mkdir -p "$dir"
-  LOG_FILE="$dir/run-$(date +%Y%m%d-%H%M%S).log"
+  LOG_FILE=$(mktemp "$dir/run.XXXXXX") || return 1
   export LOG_FILE
   echo "로그 파일: $LOG_FILE"
 }
@@ -15,7 +15,7 @@ log_info() {
   local msg="$*"
   local line="[INFO] $(date '+%F %T') $msg"
   echo "$line"
-  [[ -n "${LOG_FILE:-}" ]] && echo "$line" >>"$LOG_FILE"
+  if [[ -n "${LOG_FILE:-}" ]]; then echo "$line" >>"$LOG_FILE"; fi
 }
 
 log_fail() {
@@ -24,7 +24,7 @@ log_fail() {
   local msg="$*"
   local line="[FAIL] $(date '+%F %T') step=$step $msg"
   echo "$line" >&2
-  [[ -n "${LOG_FILE:-}" ]] && echo "$line" >>"$LOG_FILE"
+  if [[ -n "${LOG_FILE:-}" ]]; then echo "$line" >>"$LOG_FILE"; fi
 }
 
 log_pass() {
@@ -33,5 +33,5 @@ log_pass() {
   local msg="$*"
   local line="[PASS] $(date '+%F %T') step=$step $msg"
   echo "$line"
-  [[ -n "${LOG_FILE:-}" ]] && echo "$line" >>"$LOG_FILE"
+  if [[ -n "${LOG_FILE:-}" ]]; then echo "$line" >>"$LOG_FILE"; fi
 }

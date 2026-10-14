@@ -1,162 +1,93 @@
 # Private Cloud API Test Automation
 
-This repository is a sanitized reconstruction of API automation used in a private cloud QA environment.
+Shell + curl + jq로 클라우드 QA의 **생성 → 상태 검증 → 삭제 확인** 흐름을 공개용으로 재구성한 데모입니다. HTTP 요청 성공과 업무 결과, 최종 리소스 상태를 분리합니다.
 
-Private Cloud(IaaS) 환경에서 수행한 **REST API 기능 검증·반복 테스트 자동화**를, 사내·고객·인프라 정보를 제거한 뒤 공개용으로 재구성한 프로젝트입니다.
+## 바로 검증
 
-실제 회사명, 제품명, 고객 환경, 내부 URL/IP, 자격증명, 실제 API 경로·리소스명·요청 데이터는 포함하지 않습니다.
-
----
-
-## Overview
-
-콘솔과 수동 API 호출로 리소스를 만들고, 상태가 안정될 때까지 확인한 뒤 검증·삭제하는 작업이 반복되던 흐름을 Shell + curl + jq로 자동화했습니다.
-
-이 저장소는 전체 제품·시나리오를 그대로 옮긴 것이 아니라, 평가자가 구조를 빠르게 파악할 수 있도록 **Compute Instance 수명주기(생성 → 상태 대기 → 검증 → 삭제)** 한 줄기를 중심으로 정리했습니다.
-
----
-
-## What it solves
-
-- 동일 API 시나리오의 반복 실행
-- 리소스 생성·삭제와 ID 추적
-- 생성 직후 완료되지 않는 리소스의 상태 확인(폴링)
-- HTTP 상태·응답 본문의 반복 육안 확인 감소
-- 실패 지점을 로그로 좁혀 원인 분석 시간 단축
-
----
-
-## Tech Stack
-
-| Stack | Role |
-|---|---|
-| Bash | 시나리오·공통 라이브러리 |
-| curl | REST API 호출 |
-| jq | 응답 파싱·필드 검증 |
-| `.env` | Base URL, 토큰, 타임아웃 |
-| Linux | 실행 환경 |
-
----
-
-## Project Structure
-
-```text
-.
-├── common/
-│   ├── request.sh      # curl 래퍼, HTTP status / elapsed 분리
-│   ├── assertion.sh    # step 실행, HTTP·Body 검증, 결과 집계
-│   ├── polling.sh      # 비동기 상태 폴링 (예: BUILD → ACTIVE)
-│   ├── cleanup.sh      # 삭제 및 삭제 확인, 중단 시 정리
-│   └── logger.sh       # PASS / FAIL / INFO 로그
-├── scenarios/
-│   └── compute/
-│       └── create_and_delete_instance.sh
-├── config/
-│   └── env.sh
-├── data/
-│   └── create_instance.json
-├── scripts/
-│   └── run.sh
-├── logs/
-├── .env.example
-└── README.md
-```
-
-| Path | Responsibility |
-|---|---|
-| `common/` | 요청·검증·폴링·정리 등 재사용 계층 |
-| `scenarios/` | 비즈니스 흐름(시나리오)만 기술 |
-| `config/` | 환경변수 로드 |
-| `data/` | 요청 본문 템플릿(예시 값) |
-| `scripts/run.sh` | 실행 진입점 |
-
----
-
-## Test Flow
-
-```text
-Load .env → Auth header
-        ↓
-Create Instance (POST)
-        ↓
-Validate HTTP (200 / 201) → extract Resource ID
-        ↓
-Poll status until ACTIVE
-  (BUILD → BUILD → ACTIVE | ERROR | TIMEOUT)
-        ↓
-GET + body validation (status == ACTIVE)
-        ↓
-Delete Instance
-        ↓
-Verify deletion (404 / 410)
-```
-
-시나리오 실행 중 실패하거나 중단되면, 추적 중인 리소스에 대해 cleanup을 시도합니다.
-
----
-
-## Key Design
-
-### Request wrapper
-
-`common/request.sh`의 `http_request`는 curl `-w`로 **HTTP status**와 **소요 시간**을 body와 분리합니다.  
-`http_safe`는 실패 시 step 설명, HTTP 코드, endpoint, 응답 일부, elapsed를 남깁니다.
-
-### Step execution
-
-`try_step`으로 단계를 나누어 실행하고 PASS/FAIL과 실패 step 목록을 집계합니다.
-
-### Polling
-
-Private Cloud 인스턴스는 생성 API 성공만으로 사용 가능 상태가 아닙니다.  
-상세 조회를 반복하며 `ACTIVE`를 기다리고, `ERROR`면 즉시 실패, 제한 시간 초과 시 timeout 처리합니다.
-
-### Cleanup
-
-생성 시 Resource ID를 추적하고, 삭제 후 GET이 404/410이면 삭제로 간주합니다.
-
-### Configuration
-
-`BASE_URL`, `API_TOKEN`, 타임아웃은 `.env`만 사용합니다. 저장소에는 `.env.example`만 포함합니다.
-
----
-
-## Scenario
-
-**Compute Instance lifecycle**
-
-1. 예시 JSON으로 Instance 생성  
-2. ID 저장 후 `ACTIVE`까지 폴링  
-3. GET으로 상태 재확인  
-4. 삭제 후 삭제 확인  
-
-요청·리소스 이름은 모두 일반화되어 있습니다 (`qa-test-instance`, `qa-test-network`, `/api/v1/instances`).
-
----
-
-## How to Run
-
-필수 도구: `bash`, `curl`, `jq`, `envsubst` (gettext)
+필수 도구: Bash, curl, jq, Python 3.9 이상. Python은 로컬 합성 API와 회귀 검증에만 사용하며 추가 패키지가 필요하지 않습니다.
 
 ```bash
-cp .env.example .env
-# .env 에 BASE_URL, API_TOKEN 설정
-
-chmod +x scripts/run.sh
-./scripts/run.sh
+python3 -m unittest discover -s tests -v -f
 ```
 
-공개용 예시 엔드포인트에는 실제 서비스가 연결되어 있지 않을 수 있습니다.  
-로컬·개인 테스트 환경의 Base URL과 토큰을 넣어 실행하세요. 사내·운영 자격증명은 사용하지 마세요.
+검증마다 임의의 로컬 포트에 합성 서버를 시작하고 종료합니다. 회사 계정·외부 API·인터넷 연결은 필요하지 않습니다. `-f`는 첫 실패에서 중단합니다.
 
----
+| 검증 | 기대 |
+|---|---|
+| HTTP 201 생성 | 호출한 셸에 HTTP 상태가 보존되고 생성·검증·삭제 성공 |
+| HTTP 200 + 업무 실패 | 실패 종료, 반환된 ID는 정리 |
+| 최종 ERROR / INACTIVE | ACTIVE로 오인하지 않고 실패 종료 |
+| 다른 리소스 이름 | 상태가 ACTIVE여도 실패 |
+| 삭제 실패 | 실패 종료, ID 보존, DELETE 자동 재시도 없음 |
+| 통신 실패 | 이전 응답 초기화, curl 종료 코드 보존 |
 
-## Confidentiality
+이 검증은 잘못된 응답에 대해 시나리오가 **실패하는지 확인**합니다. 실패를 무시하거나 xfail로 처리하지 않습니다.
 
-- 회사명 / 고객사명 / 제품명 → 제거 또는 일반화
-- 내부 URL, Domain, IP, Port → `$BASE_URL`
-- Token, Password, API Key, Cookie → `$API_TOKEN` 등
-- 실제 Endpoint·리소스명·Request Body → 예시 값으로 대체
-- 인증서, 실행 로그, 실환경 ID 파일 → 미포함
+## 데모를 단계별로 실행
 
-This repository is a sanitized reconstruction of API automation used in a private cloud QA environment.
+터미널 1:
+
+```bash
+python3 demo/server.py
+```
+
+터미널 2:
+
+```bash
+BASE_URL=http://127.0.0.1:8766 API_TOKEN=demo-token bash scripts/run.sh
+```
+
+`demo-token`은 로컬 합성 서버의 공개 예제 문자열입니다. 실제 자격증명이 아닙니다. `.env` 없이 환경변수로 실행할 수 있고, 필요하면 `.env.example`을 복사합니다. 이름을 생략하면 실행별 이름을 생성합니다.
+
+## 핵심 구현
+
+### 요청 결과 보존
+
+`http_request`는 현재 셸에서 호출하고 `HTTP_STATUS`, `HTTP_BODY`, `HTTP_TIME`, `HTTP_STDERR`, `HTTP_CURL_EXIT`를 읽습니다. 본문은 임시 파일로 분리해 JSON 내부 문자열이 메타데이터로 해석되지 않게 합니다.
+
+```bash
+http_safe get-instance GET "$url" >/dev/null || return 1
+assert_http_status 200 get_http || return 1
+assert_business_success "$HTTP_BODY" || return 1
+```
+
+`body=$(http_safe ...)` 뒤 부모 셸의 HTTP 상태를 읽지 않습니다. HTTP 성공이어도 응답의 `returnCode` 또는 `success`가 실패를 나타내면 FAIL입니다.
+
+### 정확한 리소스 판정
+
+생성은 200/201을 허용하고 ID를 추적합니다. 폴링은 `BUILD`/`CREATING`에서만 관측을 이어가며, `ACTIVE` 완전 일치만 성공입니다. HTTP 오류·잘못된 JSON·다른 상태는 실패합니다. 최종 조회는 ID·name·status를 함께 검증합니다.
+
+### 실패 후 정리와 원인 보존
+
+반환된 ID는 후속 assertion 전에 기록합니다. EXIT에서 정리를 수행하며 원래 실패 종료 코드를 유지합니다. 삭제 요청·조회에서 오류가 나면 자동 재요청하지 않습니다. 정상 삭제 후 조회에서 404/410을 확인한 ID만 추적에서 제거합니다.
+
+`logs/run.*.resources.json`에 잔여 ID가 남으며, 정리 실패는 성공 실행으로 표시하지 않습니다. 생성 요청 결과에 ID가 없거나 응답 자체를 받지 못한 경우에는 로그의 고유 이름으로 수동 확인해야 합니다. 서버 측 idempotency나 불명확한 생성 요청 재전송은 구현하지 않았습니다.
+
+## 구조
+
+| 경로 | 책임 |
+|---|---|
+| `common/request.sh` | curl 결과와 전송 오류 보존 |
+| `common/assertion.sh` | HTTP·JSON 업무 결과·필드 assertion, 단계 집계 |
+| `common/polling.sh` | 최종 상태 확인과 오류·시간 제한 처리 |
+| `common/cleanup.sh` | 실행별 자원 추적, 삭제 검증, 종료 시 정리 |
+| `common/logger.sh` | 실행별 로그 |
+| `scenarios/compute/create_and_delete_instance.sh` | Instance lifecycle |
+| `config/env.sh`, `data/` | 실행 설정·jq로 안전하게 채우는 요청 본문 |
+| `demo/server.py` | 로컬 합성 API |
+| `tests/test_contract.py` | 정상·실패 응답에 대한 회귀 계약 |
+
+## 데모 API 계약
+
+- `POST /api/v1/instances`: `name`, `network`, `flavor`, `image`; 201 + `id/name/status`
+- `GET /api/v1/instances/{id}`: 200 + `id/name/status`, 없으면 404
+- `DELETE /api/v1/instances/{id}`: 성공 2xx, 이후 조회 404/410
+- 선택 필드 `returnCode`가 있으면 `COMMON_OK`, `success`가 있으면 `true`여야 성공
+
+로컬 서버는 생성 즉시 ACTIVE가 됩니다. 실제 클라우드의 처리 시간·상태 전환·인증을 재현하지 않습니다. 다른 API에는 URL과 토큰뿐 아니라 요청·응답 계약도 맞춰야 합니다.
+
+## 업무 경험과 공개 범위
+
+실무에서 사용한 공통 요청, 상태 관측, 단계별 결과, 리소스 ID 추적·정리 방식을 일반화했습니다. 전체 업무 시나리오, 자동 토큰 갱신 daemon, 환경 자동 조회, Kubernetes 비정상 Pod 시나리오는 이 공개 데모에 포함하지 않습니다.
+
+사내·운영 자격증명, 내부 주소, 실제 리소스 ID와 실행 로그는 커밋하지 않습니다. 단순 성공 응답만으로 PASS를 만들지 않고, 실패 원인과 남은 자원을 다음 QA가 확인할 수 있도록 하는 데 초점을 둡니다.

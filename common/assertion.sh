@@ -63,3 +63,14 @@ print_summary() {
   fi
   ((FAIL == 0))
 }
+
+assert_business_success() {
+  if ! printf '%s' "$1" | "${JQ_PATH:-jq}" -e '
+    type == "object" and
+    (if has("returnCode") then .returnCode == "COMMON_OK" else true end) and
+    (if has("success") then .success == true else true end)
+  ' >/dev/null; then
+    log_fail business_result 'HTTP 성공과 별개로 JSON 형식 또는 업무 결과가 실패입니다.'
+    return 1
+  fi
+}
