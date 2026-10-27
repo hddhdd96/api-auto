@@ -1,0 +1,80 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Demo Instance API",
+    "version": "1.0.0",
+    "description": "README '데모 API 계약'을 옮긴 명세. x-source가 'README'인 항목은 README에 적힌 약속이고, 'server'인 항목은 README에 없어 demo/server.py의 현재 동작을 옮긴 것이다. 비정상 TC 초안 생성의 입력으로 쓴다."
+  },
+  "servers": [{ "url": "http://127.0.0.1:8766", "description": "demo/server.py (로컬 합성 서버)" }],
+  "security": [{ "bearer": [] }],
+  "components": {
+    "securitySchemes": {
+      "bearer": { "type": "http", "scheme": "bearer", "description": "로컬 데모 토큰 demo-token. 토큰이 없거나 다르면 401", "x-source": "server" }
+    },
+    "schemas": {
+      "CreateInstanceRequest": {
+        "type": "object",
+        "required": ["name", "network", "flavor", "image"],
+        "x-source": "README: `name`, `network`, `flavor`, `image`",
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "description": "빈 문자열 불가(server). 최대 길이는 README·server 모두 정하지 않음" },
+          "network": { "type": "string" },
+          "flavor": { "type": "string" },
+          "image": { "type": "string" }
+        }
+      },
+      "Instance": {
+        "type": "object",
+        "required": ["id", "name", "status"],
+        "x-source": "README: 201 + `id/name/status`",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string", "description": "요청한 이름과 같아야 함" },
+          "status": { "type": "string", "description": "로컬 서버는 생성 즉시 ACTIVE. 시나리오는 ACTIVE 완전 일치만 성공으로 본다" },
+          "returnCode": { "type": "string", "description": "있으면 COMMON_OK여야 업무 성공(README)" },
+          "success": { "type": "boolean", "description": "있으면 true여야 업무 성공(README)" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "x-source": "server",
+        "properties": { "returnCode": { "type": "string", "enum": ["UNAUTHORIZED", "INVALID_INPUT", "DELETE_FAILED", "CREATE_FAILED"] } }
+      }
+    },
+    "parameters": {
+      "InstanceId": { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+    }
+  },
+  "paths": {
+    "/api/v1/instances": {
+      "post": {
+        "summary": "인스턴스 생성",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateInstanceRequest" } } } },
+        "responses": {
+          "201": { "description": "생성됨", "x-source": "README", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Instance" } } } },
+          "400": { "description": "요청 본문이 JSON 객체가 아니거나, name이 없거나 빈 문자열/문자열이 아니거나, network·flavor·image가 없거나 문자열이 아님 → INVALID_INPUT (network·flavor·image 검사는 2026-10-27 비정상 TC 검토에서 불일치를 발견해 추가)", "x-source": "server", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "401": { "description": "토큰 없음 또는 다름 → UNAUTHORIZED", "x-source": "server" }
+        }
+      }
+    },
+    "/api/v1/instances/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/InstanceId" }],
+      "get": {
+        "summary": "인스턴스 조회",
+        "responses": {
+          "200": { "description": "id/name/status", "x-source": "README", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Instance" } } } },
+          "404": { "description": "없는 id", "x-source": "README" },
+          "401": { "description": "토큰 없음 또는 다름", "x-source": "server" }
+        }
+      },
+      "delete": {
+        "summary": "인스턴스 삭제",
+        "responses": {
+          "2XX": { "description": "삭제 성공. 이후 조회는 404 또는 410", "x-source": "README" },
+          "404": { "description": "없는 id(이미 삭제된 id 포함)", "x-source": "server" },
+          "401": { "description": "토큰 없음 또는 다름", "x-source": "server" }
+        }
+      }
+    }
+  }
+}

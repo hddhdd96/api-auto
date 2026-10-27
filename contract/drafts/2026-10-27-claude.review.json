@@ -1,0 +1,179 @@
+{
+  "reviewedBy": "Seungjoo Han",
+  "reviewedAt": "2026-10-27",
+  "drafts": "contract/drafts/2026-10-27-claude.json",
+  "summary": {
+    "drafts": 27,
+    "adopted": 23,
+    "excluded": 4,
+    "mismatchesFound": 5
+  },
+  "review": [
+    {
+      "id": "D01",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 401
+    },
+    {
+      "id": "D02",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 401
+    },
+    {
+      "id": "D03",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 401
+    },
+    {
+      "id": "D04",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 401
+    },
+    {
+      "id": "D05",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 400
+    },
+    {
+      "id": "D06",
+      "decision": "adopted",
+      "reason": "명세(README 필수 항목)와 서버 동작 불일치 발견. 서버를 명세에 맞게 수정한 뒤 채택",
+      "observed": 201
+    },
+    {
+      "id": "D07",
+      "decision": "adopted",
+      "reason": "명세(README 필수 항목)와 서버 동작 불일치 발견. 서버를 명세에 맞게 수정한 뒤 채택",
+      "observed": 201
+    },
+    {
+      "id": "D08",
+      "decision": "adopted",
+      "reason": "명세(README 필수 항목)와 서버 동작 불일치 발견. 서버를 명세에 맞게 수정한 뒤 채택",
+      "observed": 201
+    },
+    {
+      "id": "D09",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 400
+    },
+    {
+      "id": "D10",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 400
+    },
+    {
+      "id": "D11",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 400
+    },
+    {
+      "id": "D12",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 400
+    },
+    {
+      "id": "D13",
+      "decision": "adopted",
+      "reason": "명세(README 필수 항목)와 서버 동작 불일치 발견. 서버를 명세에 맞게 수정한 뒤 채택",
+      "observed": 201
+    },
+    {
+      "id": "D14",
+      "decision": "adopted",
+      "reason": "명세(README 필수 항목)와 서버 동작 불일치 발견. 서버를 명세에 맞게 수정한 뒤 채택",
+      "observed": 201
+    },
+    {
+      "id": "D15",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 400
+    },
+    {
+      "id": "D16",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 400
+    },
+    {
+      "id": "D17",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 400
+    },
+    {
+      "id": "D18",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 201
+    },
+    {
+      "id": "D19",
+      "decision": "excluded",
+      "reason": "명세에 기대값 없음. 요구사항 확인 필요: name 최대 길이는 몇 자인가?",
+      "observed": 201
+    },
+    {
+      "id": "D20",
+      "decision": "excluded",
+      "reason": "명세에 기대값 없음. 요구사항 확인 필요: 공백만 있는 이름을 허용하는가?",
+      "observed": 201
+    },
+    {
+      "id": "D21",
+      "decision": "excluded",
+      "reason": "명세에 기대값 없음. 요구사항 확인 필요: network 빈 문자열을 허용하는가?",
+      "observed": 201
+    },
+    {
+      "id": "D22",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 404
+    },
+    {
+      "id": "D23",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 404
+    },
+    {
+      "id": "D24",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 404
+    },
+    {
+      "id": "D25",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 404
+    },
+    {
+      "id": "D26",
+      "decision": "adopted",
+      "reason": "명세대로 동작 확인",
+      "observed": 404
+    },
+    {
+      "id": "D27",
+      "decision": "excluded",
+      "reason": "명세에 기대값 없음. 요구사항 확인 필요: 정의되지 않은 필드는 무시하는가, 거절하는가?",
+      "observed": 201
+    }
+  ],
+  "notes": [
+    "초안 생성 시 입력은 inputSha256의 openapi.json이며, 검토 후 서버 수정에 맞춰 openapi.json의 400 설명을 갱신했다.",
+    "results.json은 서버 수정 전, results-after-fix.json은 수정 후 실행 결과다."
+  ]
+}

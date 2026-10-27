@@ -1,0 +1,163 @@
+{
+  "generator": "Claude Opus 5.5 (Claude Code 대화)",
+  "prompt": "contract/prompts/negative-tc-drafts.md",
+  "input": "contract/openapi.json",
+  "inputSha256": "74104a6da09f64549f106baf43eb2ee7b30c09c60d4914f8f74fe5207a5725d5",
+  "generatedAt": "2026-10-27",
+  "drafts": [
+    {
+      "id": "D01", "category": "auth", "title": "토큰 없이 생성 요청",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "none", "setup": "none",
+        "body": { "name": "qa-draft", "network": "qa-net", "flavor": "qa.small", "image": "qa-base-image" } },
+      "expected": { "status": 401 }, "basis": "securitySchemes.bearer: 토큰이 없거나 다르면 401; POST responses.401"
+    },
+    {
+      "id": "D02", "category": "auth", "title": "잘못된 토큰으로 생성 요청",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "invalid", "setup": "none",
+        "body": { "name": "qa-draft", "network": "qa-net", "flavor": "qa.small", "image": "qa-base-image" } },
+      "expected": { "status": 401 }, "basis": "securitySchemes.bearer; POST responses.401"
+    },
+    {
+      "id": "D03", "category": "auth", "title": "토큰 없이 조회 요청",
+      "request": { "method": "GET", "path": "/api/v1/instances/{id}", "auth": "none", "setup": "create", "body": null },
+      "expected": { "status": 401 }, "basis": "GET responses.401"
+    },
+    {
+      "id": "D04", "category": "auth", "title": "토큰 없이 삭제 요청(삭제되지 않아야 함)",
+      "request": { "method": "DELETE", "path": "/api/v1/instances/{id}", "auth": "none", "setup": "create", "body": null },
+      "expected": { "status": 401 }, "basis": "DELETE responses.401"
+    },
+    {
+      "id": "D05", "category": "missing_field", "title": "name 누락",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": { "network": "qa-net", "flavor": "qa.small", "image": "qa-base-image" } },
+      "expected": { "status": 400 }, "basis": "CreateInstanceRequest.required에 name; POST responses.400"
+    },
+    {
+      "id": "D06", "category": "missing_field", "title": "network 누락",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": { "name": "qa-draft", "flavor": "qa.small", "image": "qa-base-image" } },
+      "expected": { "status": 400 }, "basis": "CreateInstanceRequest.required에 network(README)"
+    },
+    {
+      "id": "D07", "category": "missing_field", "title": "flavor 누락",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": { "name": "qa-draft", "network": "qa-net", "image": "qa-base-image" } },
+      "expected": { "status": 400 }, "basis": "CreateInstanceRequest.required에 flavor(README)"
+    },
+    {
+      "id": "D08", "category": "missing_field", "title": "image 누락",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": { "name": "qa-draft", "network": "qa-net", "flavor": "qa.small" } },
+      "expected": { "status": 400 }, "basis": "CreateInstanceRequest.required에 image(README)"
+    },
+    {
+      "id": "D09", "category": "missing_field", "title": "빈 객체 본문",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none", "body": {} },
+      "expected": { "status": 400 }, "basis": "필수 필드 4개 모두 없음"
+    },
+    {
+      "id": "D10", "category": "boundary", "title": "name 빈 문자열",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": { "name": "", "network": "qa-net", "flavor": "qa.small", "image": "qa-base-image" } },
+      "expected": { "status": 400 }, "basis": "name.minLength 1; POST responses.400(빈 문자열)"
+    },
+    {
+      "id": "D11", "category": "type", "title": "name에 숫자",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": { "name": 123, "network": "qa-net", "flavor": "qa.small", "image": "qa-base-image" } },
+      "expected": { "status": 400 }, "basis": "name.type string; POST responses.400(문자열이 아님)"
+    },
+    {
+      "id": "D12", "category": "type", "title": "name에 null",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": { "name": null, "network": "qa-net", "flavor": "qa.small", "image": "qa-base-image" } },
+      "expected": { "status": 400 }, "basis": "name.type string"
+    },
+    {
+      "id": "D13", "category": "type", "title": "network에 숫자",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": { "name": "qa-draft", "network": 7, "flavor": "qa.small", "image": "qa-base-image" } },
+      "expected": { "status": 400 }, "basis": "network.type string"
+    },
+    {
+      "id": "D14", "category": "type", "title": "flavor에 배열",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": { "name": "qa-draft", "network": "qa-net", "flavor": ["qa.small"], "image": "qa-base-image" } },
+      "expected": { "status": 400 }, "basis": "flavor.type string"
+    },
+    {
+      "id": "D15", "category": "malformed", "title": "JSON이 아닌 본문",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": { "raw": "name=qa-draft&network=qa-net" } },
+      "expected": { "status": 400 }, "basis": "requestBody application/json; POST responses.400(JSON이 아님)"
+    },
+    {
+      "id": "D16", "category": "malformed", "title": "본문이 JSON 배열",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": [{ "name": "qa-draft", "network": "qa-net", "flavor": "qa.small", "image": "qa-base-image" }] },
+      "expected": { "status": 400 }, "basis": "CreateInstanceRequest.type object"
+    },
+    {
+      "id": "D17", "category": "malformed", "title": "본문 없이 생성 요청",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none", "body": null },
+      "expected": { "status": 400 }, "basis": "requestBody.required true"
+    },
+    {
+      "id": "D18", "category": "boundary", "title": "name 1글자(허용되어야 함)",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": { "name": "a", "network": "qa-net", "flavor": "qa.small", "image": "qa-base-image" } },
+      "expected": { "status": 201 }, "basis": "name.minLength 1 경계값"
+    },
+    {
+      "id": "D19", "category": "boundary", "title": "name 1만 자",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": { "name": "__REPEAT_a_10000__", "network": "qa-net", "flavor": "qa.small", "image": "qa-base-image" } },
+      "expected": { "status": null }, "basis": "name 최대 길이는 README·server 모두 정하지 않음 → 사람이 결정"
+    },
+    {
+      "id": "D20", "category": "boundary", "title": "name 공백만",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": { "name": "   ", "network": "qa-net", "flavor": "qa.small", "image": "qa-base-image" } },
+      "expected": { "status": null }, "basis": "minLength 1은 만족하지만 공백 이름 허용 여부는 정의 없음 → 사람이 결정"
+    },
+    {
+      "id": "D21", "category": "boundary", "title": "network 빈 문자열",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": { "name": "qa-draft", "network": "", "flavor": "qa.small", "image": "qa-base-image" } },
+      "expected": { "status": null }, "basis": "network에 minLength 정의 없음 → 사람이 결정"
+    },
+    {
+      "id": "D22", "category": "not_found", "title": "없는 id 조회",
+      "request": { "method": "GET", "path": "/api/v1/instances/{id}", "auth": "valid", "setup": "none", "body": null },
+      "expected": { "status": 404 }, "basis": "GET responses.404(README)"
+    },
+    {
+      "id": "D23", "category": "not_found", "title": "없는 id 삭제",
+      "request": { "method": "DELETE", "path": "/api/v1/instances/{id}", "auth": "valid", "setup": "none", "body": null },
+      "expected": { "status": 404 }, "basis": "DELETE responses.404"
+    },
+    {
+      "id": "D24", "category": "state", "title": "이미 삭제한 id를 다시 삭제",
+      "request": { "method": "DELETE", "path": "/api/v1/instances/{id}", "auth": "valid", "setup": "create_then_delete", "body": null },
+      "expected": { "status": 404 }, "basis": "DELETE responses.404(이미 삭제된 id 포함)"
+    },
+    {
+      "id": "D25", "category": "state", "title": "삭제한 id 조회",
+      "request": { "method": "GET", "path": "/api/v1/instances/{id}", "auth": "valid", "setup": "create_then_delete", "body": null },
+      "expected": { "status": [404, 410] }, "basis": "DELETE 2XX: 이후 조회는 404 또는 410(README)"
+    },
+    {
+      "id": "D26", "category": "path", "title": "정의되지 않은 경로로 생성 요청",
+      "request": { "method": "POST", "path": "/api/v1/instance", "auth": "valid", "setup": "none",
+        "body": { "name": "qa-draft", "network": "qa-net", "flavor": "qa.small", "image": "qa-base-image" } },
+      "expected": { "status": 404 }, "basis": "paths에 /api/v1/instance 없음"
+    },
+    {
+      "id": "D27", "category": "boundary", "title": "정의되지 않은 필드 추가",
+      "request": { "method": "POST", "path": "/api/v1/instances", "auth": "valid", "setup": "none",
+        "body": { "name": "qa-draft", "network": "qa-net", "flavor": "qa.small", "image": "qa-base-image", "unknown": true } },
+      "expected": { "status": null }, "basis": "additionalProperties 정의 없음 → 무시할지 거절할지 사람이 결정"
+    }
+  ]
+}
