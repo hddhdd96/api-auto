@@ -44,6 +44,10 @@ class Handler(BaseHTTPRequestHandler):
             name = payload["name"]
             if not isinstance(name, str) or not name:
                 raise ValueError("name required")
+            # README 계약의 필수 항목. 빈 문자열 허용 여부는 요구사항 미정이라 검사하지 않는다(contract 리뷰 D21).
+            for field in ("network", "flavor", "image"):
+                if not isinstance(payload[field], str):
+                    raise ValueError(f"{field} must be a string")
         except (ValueError, KeyError, TypeError):
             self.send_json(400, {"returnCode": "INVALID_INPUT"})
             return

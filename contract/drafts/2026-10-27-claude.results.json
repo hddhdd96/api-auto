@@ -1,0 +1,221 @@
+[
+  {
+    "id": "D01",
+    "expected": 401,
+    "actual": 401,
+    "verdict": "일치",
+    "note": "",
+    "body": "{\"returnCode\": \"UNAUTHORIZED\"}"
+  },
+  {
+    "id": "D02",
+    "expected": 401,
+    "actual": 401,
+    "verdict": "일치",
+    "note": "",
+    "body": "{\"returnCode\": \"UNAUTHORIZED\"}"
+  },
+  {
+    "id": "D03",
+    "expected": 401,
+    "actual": 401,
+    "verdict": "일치",
+    "note": "",
+    "body": "{\"returnCode\": \"UNAUTHORIZED\"}"
+  },
+  {
+    "id": "D04",
+    "expected": 401,
+    "actual": 401,
+    "verdict": "일치",
+    "note": "삭제되지 않음",
+    "body": "{\"returnCode\": \"UNAUTHORIZED\"}"
+  },
+  {
+    "id": "D05",
+    "expected": 400,
+    "actual": 400,
+    "verdict": "일치",
+    "note": "",
+    "body": "{\"returnCode\": \"INVALID_INPUT\"}"
+  },
+  {
+    "id": "D06",
+    "expected": 400,
+    "actual": 201,
+    "verdict": "불일치",
+    "note": "리소스가 생성됨",
+    "body": "{\"id\": \"cbfcd859-bdfd-4b4a-b63a-b430b5253be5\", \"name\": \"qa-draft\", \"status\": \"ACTIVE\", \"returnCode\": \"COMMON_OK\"}"
+  },
+  {
+    "id": "D07",
+    "expected": 400,
+    "actual": 201,
+    "verdict": "불일치",
+    "note": "리소스가 생성됨",
+    "body": "{\"id\": \"1dcae223-aa2b-4d75-bf92-b05bf8413d2c\", \"name\": \"qa-draft\", \"status\": \"ACTIVE\", \"returnCode\": \"COMMON_OK\"}"
+  },
+  {
+    "id": "D08",
+    "expected": 400,
+    "actual": 201,
+    "verdict": "불일치",
+    "note": "리소스가 생성됨",
+    "body": "{\"id\": \"5351d7af-11f3-48a2-8fc3-6197ed542343\", \"name\": \"qa-draft\", \"status\": \"ACTIVE\", \"returnCode\": \"COMMON_OK\"}"
+  },
+  {
+    "id": "D09",
+    "expected": 400,
+    "actual": 400,
+    "verdict": "일치",
+    "note": "",
+    "body": "{\"returnCode\": \"INVALID_INPUT\"}"
+  },
+  {
+    "id": "D10",
+    "expected": 400,
+    "actual": 400,
+    "verdict": "일치",
+    "note": "",
+    "body": "{\"returnCode\": \"INVALID_INPUT\"}"
+  },
+  {
+    "id": "D11",
+    "expected": 400,
+    "actual": 400,
+    "verdict": "일치",
+    "note": "",
+    "body": "{\"returnCode\": \"INVALID_INPUT\"}"
+  },
+  {
+    "id": "D12",
+    "expected": 400,
+    "actual": 400,
+    "verdict": "일치",
+    "note": "",
+    "body": "{\"returnCode\": \"INVALID_INPUT\"}"
+  },
+  {
+    "id": "D13",
+    "expected": 400,
+    "actual": 201,
+    "verdict": "불일치",
+    "note": "리소스가 생성됨",
+    "body": "{\"id\": \"00dc5c05-df0f-4c3c-9a48-69d0c858221d\", \"name\": \"qa-draft\", \"status\": \"ACTIVE\", \"returnCode\": \"COMMON_OK\"}"
+  },
+  {
+    "id": "D14",
+    "expected": 400,
+    "actual": 201,
+    "verdict": "불일치",
+    "note": "리소스가 생성됨",
+    "body": "{\"id\": \"5b532493-738b-4db9-a920-968ed5c1cc31\", \"name\": \"qa-draft\", \"status\": \"ACTIVE\", \"returnCode\": \"COMMON_OK\"}"
+  },
+  {
+    "id": "D15",
+    "expected": 400,
+    "actual": 400,
+    "verdict": "일치",
+    "note": "",
+    "body": "{\"returnCode\": \"INVALID_INPUT\"}"
+  },
+  {
+    "id": "D16",
+    "expected": 400,
+    "actual": 400,
+    "verdict": "일치",
+    "note": "",
+    "body": "{\"returnCode\": \"INVALID_INPUT\"}"
+  },
+  {
+    "id": "D17",
+    "expected": 400,
+    "actual": 400,
+    "verdict": "일치",
+    "note": "",
+    "body": "{\"returnCode\": \"INVALID_INPUT\"}"
+  },
+  {
+    "id": "D18",
+    "expected": 201,
+    "actual": 201,
+    "verdict": "일치",
+    "note": "리소스가 생성됨",
+    "body": "{\"id\": \"1daced86-3374-42a8-85e3-0a4adaddff4f\", \"name\": \"a\", \"status\": \"ACTIVE\", \"returnCode\": \"COMMON_OK\"}"
+  },
+  {
+    "id": "D19",
+    "expected": null,
+    "actual": 201,
+    "verdict": "명세 기대값 없음",
+    "note": "리소스가 생성됨",
+    "body": "{\"id\": \"cf87b348-2f14-4a4c-bef3-e2f2a1e9d075\", \"name\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  {
+    "id": "D20",
+    "expected": null,
+    "actual": 201,
+    "verdict": "명세 기대값 없음",
+    "note": "리소스가 생성됨",
+    "body": "{\"id\": \"02fb1f08-1e6c-4a59-be3f-d3ff99e1e22a\", \"name\": \"   \", \"status\": \"ACTIVE\", \"returnCode\": \"COMMON_OK\"}"
+  },
+  {
+    "id": "D21",
+    "expected": null,
+    "actual": 201,
+    "verdict": "명세 기대값 없음",
+    "note": "리소스가 생성됨",
+    "body": "{\"id\": \"fd8bde82-619f-4c5a-9161-6f385984e47a\", \"name\": \"qa-draft\", \"status\": \"ACTIVE\", \"returnCode\": \"COMMON_OK\"}"
+  },
+  {
+    "id": "D22",
+    "expected": 404,
+    "actual": 404,
+    "verdict": "일치",
+    "note": "",
+    "body": "{}"
+  },
+  {
+    "id": "D23",
+    "expected": 404,
+    "actual": 404,
+    "verdict": "일치",
+    "note": "",
+    "body": "{}"
+  },
+  {
+    "id": "D24",
+    "expected": 404,
+    "actual": 404,
+    "verdict": "일치",
+    "note": "",
+    "body": "{}"
+  },
+  {
+    "id": "D25",
+    "expected": [
+      404,
+      410
+    ],
+    "actual": 404,
+    "verdict": "일치",
+    "note": "",
+    "body": "{}"
+  },
+  {
+    "id": "D26",
+    "expected": 404,
+    "actual": 404,
+    "verdict": "일치",
+    "note": "",
+    "body": "{}"
+  },
+  {
+    "id": "D27",
+    "expected": null,
+    "actual": 201,
+    "verdict": "명세 기대값 없음",
+    "note": "리소스가 생성됨",
+    "body": "{\"id\": \"2612f9df-0073-4d7c-bcff-4f97d42a4aab\", \"name\": \"qa-draft\", \"status\": \"ACTIVE\", \"returnCode\": \"COMMON_OK\"}"
+  }
+]
