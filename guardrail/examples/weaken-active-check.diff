@@ -1,0 +1,6 @@
+diff --git a/common/polling.sh b/common/polling.sh
+--- a/common/polling.sh
++++ b/common/polling.sh
+@@ -14 +14 @@
+-    if [[ "$status" == "$expected" ]]; then return 0; fi
++    if [[ "$status" == *"$expected"* ]]; then return 0; fi

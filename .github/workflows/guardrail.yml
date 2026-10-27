@@ -1,0 +1,30 @@
+name: Guardrail
+
+# 테스트 판정 약화 검사. 승인 라벨(test-change-approved)을 붙이거나 떼면 이 검사만 다시 실행한다.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: guardrail-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  guardrail:
+    name: test-weakening guardrail
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Guardrail self-test
+        run: python3 -m unittest discover -s guardrail -v
+      - name: Check PR diff for weakened test judgments
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          APPROVED: ${{ contains(github.event.pull_request.labels.*.name, 'test-change-approved') && '--approved' || '' }}
+        run: python3 guardrail/check_test_weakening.py --base "origin/${BASE_REF}" ${APPROVED}
