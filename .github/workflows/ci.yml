@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: contract tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - name: Tool versions
+        run: bash --version | head -1 && curl --version | head -1 && jq --version && python3 --version
+      # -f: 첫 실패에서 중단. 잘못된 응답에 시나리오가 실패하는지까지 검증한다.
+      - run: python3 -m unittest discover -s tests -v -f
