@@ -12,6 +12,15 @@ Shell + curl + jq로 클라우드 QA의 **생성 → 상태 검증 → 삭제 �
 python3 -m unittest discover -s tests -v -f
 ```
 
+정상 흐름 검증과 네거티브 TC는 파일을 나눠 따로 실행할 수도 있습니다.
+
+```bash
+python3 -m unittest tests.test_contract -v           # 정상 흐름: 생성 → 상태 검증 → 삭제 확인
+python3 -m unittest tests.test_negative_contract -v  # 네거티브 TC: 잘못된 요청 거절 확인
+```
+
+실무에서도 회귀 API 자동화와 네거티브 시나리오 API 자동화를 같은 저장소에 두되 폴더와 실행 단위를 나눠 운영했습니다. 이 샘플도 같은 방식으로 두 검증을 한 저장소 안에서 파일 단위로 나눴습니다.
+
 검증마다 임의의 로컬 포트에 합성 서버를 시작하고 종료합니다. 회사 계정·외부 API·인터넷 연결은 필요하지 않습니다. `-f`는 첫 실패에서 중단합니다.
 
 | 검증 | 기대 |
