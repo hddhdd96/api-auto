@@ -1,6 +1,0 @@
-{
-  "name": "${INSTANCE_NAME}",
-  "network": "${NETWORK_NAME}",
-  "flavor": "qa.small",
-  "image": "qa-base-image"
-}

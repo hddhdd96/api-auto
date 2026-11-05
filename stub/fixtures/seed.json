@@ -1,0 +1,32 @@
+{
+  "environments": [
+    {
+      "id": "env-dev-001",
+      "name": "demo-dev",
+      "region": "local-a",
+      "status": "ready",
+      "tags": ["dev", "smoke"]
+    },
+    {
+      "id": "env-stg-001",
+      "name": "demo-stg",
+      "region": "local-b",
+      "status": "ready",
+      "tags": ["staging"]
+    },
+    {
+      "id": "env-prd-001",
+      "name": "demo-prd",
+      "region": "local-c",
+      "status": "locked",
+      "tags": ["prod", "readonly"]
+    }
+  ],
+  "resources": [
+    {"id": "res-qa-001", "name": "qa-smoke-vm-01", "type": "vm", "env_id": "env-dev-001"},
+    {"id": "res-qa-002", "name": "qa-smoke-vm-02", "type": "vm", "env_id": "env-dev-001"},
+    {"id": "res-qa-003", "name": "qa-batch-disk-01", "type": "disk", "env_id": "env-dev-001"},
+    {"id": "res-keep-001", "name": "shared-bastion", "type": "vm", "env_id": "env-stg-001"},
+    {"id": "res-tmp-001", "name": "tmp-cleanup-me", "type": "vm", "env_id": "env-stg-001"}
+  ]
+}

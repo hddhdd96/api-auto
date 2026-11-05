@@ -1,8 +1,15 @@
 .env
 logs/
 __pycache__/
+*.py[cod]
 *.pem
 *.pfx
 *.key
-ids*.env
 .DS_Store
+artifacts/*
+!artifacts/.gitkeep
+!artifacts/SCREENSHOTS.md
+.venv/
+venv/
+*.xlsx
+!demos/04_csv_xlsx/sample_template.csv
